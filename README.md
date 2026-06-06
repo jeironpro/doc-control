@@ -4,7 +4,7 @@ Panel de gestión documental con interfaz de tarjetas, CRUD vía modales y naveg
 
 ## Capturas
 
-*(pendiente)*
+![Demo](docs/screenshots/demo.png)
 
 ## Requisitos
 
