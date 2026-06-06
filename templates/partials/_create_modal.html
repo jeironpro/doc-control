@@ -1,0 +1,76 @@
+<div class="modal-backdrop">
+    <div class="modal" role="dialog">
+        <!-- Cabecera del modal -->
+        <div class="modal-head">
+            <div class="modal-head-left">
+                <span class="material-icons">note_add</span>
+                <h2>Nuevo Documento</h2>
+            </div>
+            <button class="modal-close" title="Cerrar">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <p class="subtitle" style="margin:0 0 1rem;font-size:0.82rem;">Completa los datos del expediente para registrarlo en el sistema.</p>
+
+            <!-- Formulario de creación → POST a /formulario -->
+            <form hx-post="/formulario" hx-target="#main-content" hx-swap="innerHTML" hx-on::after-request="if(event.detail.successful) this.closest('.modal-backdrop').remove()">
+
+                <div class="input-group">
+                    <label for="ambito">Ámbito</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons">public</span>
+                        <input type="text" id="ambito" name="ambito" placeholder="Ej. Administración Pública" >
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="codigo_verificacion">Código de Verificación</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons">vpn_key</span>
+                        <input type="text" id="codigo_verificacion" name="codigo_verificacion" placeholder="Ej. CSV-1234-ABCD" >
+                    </div>
+                </div>
+
+                <!-- Selector date / datetime-local -->
+                <div class="input-group">
+                    <label for="fecha_hora">Fecha / Hora</label>
+                    <div class="dt-toggle">
+                        <button type="button" class="dt-btn active" data-mode="datetime-local">Fecha y hora</button>
+                        <button type="button" class="dt-btn" data-mode="date">Solo fecha</button>
+                    </div>
+                    <div class="input-wrapper">
+                        <span class="material-icons">calendar_today</span>
+                        <input type="datetime-local" step="1" id="fecha_hora" name="fecha_hora" >
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="expediente_numero_registro">Nº Expediente / Registro</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons">folder_open</span>
+                        <input type="text" id="expediente_numero_registro" name="expediente_numero_registro" placeholder="Ej. EXP-2026-0089" >
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="direccion_validacion">Dirección de Validación (URL)</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons">link</span>
+                        <input type="url" id="direccion_validacion" name="direccion_validacion" placeholder="https://ejemplo.gob.es/valida" >
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel modal-close-btn">Cancelar</button>
+                    <button type="submit" class="btn-submit" style="width:auto;padding:0.75rem 1.5rem;">
+                        <span>Guardar Documento</span>
+                        <span class="material-icons">save</span>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

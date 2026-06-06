@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Panel principal{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon/documentos.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- Iconos Material Design -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- HTMX para navegación dinámica sin recargar -->
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+</head>
+<body>
+
+    <!-- Fondo oscuro para sidebar en móvil -->
+    <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+    <!-- Sidebar fijo con logo y navegación -->
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon">
+                <img src="{{ url_for('static', filename='icon/documentos.png') }}" alt="DocControl" class="logo-img">
+            </div>
+            <span class="logo-text">DocControl</span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Principal</div>
+            <button class="nav-item active" hx-get="/tabla" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="/">
+                <span class="material-icons">dashboard</span>
+                Documentos
+            </button>
+        </nav>
+        <div style="padding:1rem 0.75rem;font-size:0.75rem;color:var(--on-surface-variant);border-top:1px solid var(--outline-variant);margin-top:auto;">
+            DocControl v1.0
+        </div>
+    </aside>
+
+    <!-- Área principal con topbar y contenido -->
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+                    <span class="material-icons">menu</span>
+                </button>
+                <h1>{% block heading %}Documentos{% endblock %}</h1>
+            </div>
+        </header>
+
+        <main id="main-content" class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <!-- Contenedor para modales inyectados por HTMX -->
+    <div id="modal-root"></div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

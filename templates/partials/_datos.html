@@ -1,0 +1,103 @@
+<!-- Tarjetas de estadísticas -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div class="stat-card-icon blue">
+                <span class="material-icons">description</span>
+            </div>
+        </div>
+        <div class="stat-card-value">{{ docs | length }}</div>
+        <div class="stat-card-label">Total Documentos</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div class="stat-card-icon amber">
+                <span class="material-icons">local_offer</span>
+            </div>
+        </div>
+        <div class="stat-card-value">{% if top_ambito %}{{ top_ambito }}{% else %}--{% endif %}</div>
+        <div class="stat-card-label">Ámbito más común · {{ top_count }} doc{{ 's' if top_count != 1 else '' }}</div>
+    </div>
+</div>
+
+<!-- Encabezado con botón para nuevo registro -->
+<div class="section-header">
+    <div>
+        <h2><span class="material-icons">folder</span> Todos los Documentos</h2>
+        <p class="subtitle">Listado de expedientes registrados y validados en el sistema.</p>
+    </div>
+    <button class="btn-add" hx-get="/crear/" hx-target="#modal-root" hx-swap="innerHTML">
+        <span class="material-icons">add_circle</span>
+        <span>Nuevo Registro</span>
+    </button>
+</div>
+
+<!-- Parrilla de tarjetas de documentos -->
+{% if docs %}
+<div class="docs-grid">
+    {% for doc in docs %}
+    <div class="doc-card">
+        <!-- Cabecera: badge de ámbito y acciones -->
+        <div class="doc-card-head">
+            <span class="doc-badge">{{ doc.ambito }}</span>
+            <span class="doc-head-right">
+                <span class="doc-card-actions">
+                    <button class="btn-action btn-view" title="Editar" hx-get="/editar/{{ doc.id }}/" hx-target="#modal-root" hx-swap="innerHTML"><span class="material-icons">edit</span></button>
+                    <button class="btn-action btn-delete" title="Eliminar" hx-get="/eliminar/{{ doc.id }}/" hx-target="#modal-root" hx-swap="innerHTML"><span class="material-icons">delete</span></button>
+                </span>
+                <span class="doc-head-time">
+                    <span class="material-icons">schedule</span>
+                    {{ doc.fecha_hora }}
+                </span>
+            </span>
+        </div>
+        <!-- Organismo en mayúsculas -->
+        <h3 class="doc-organismo">{{ doc.organismo }}</h3>
+
+        <!-- Cuerpo: expediente + CSV tipo bóveda -->
+        <div class="doc-card-body">
+            <p class="doc-field-label">Número de Expediente</p>
+            <div class="doc-expediente-row">
+                <span class="doc-expediente">{{ doc.expediente_numero_registro }}</span>
+                <button class="doc-copy-btn" data-exp="{{ doc.expediente_numero_registro }}" title="Copiar expediente">
+                    <span class="material-icons">content_copy</span>
+                </button>
+            </div>
+
+            <div class="doc-vault">
+                <div class="doc-vault-head">
+                    <span class="material-icons doc-vault-icon">verified_user</span>
+                    <span class="doc-vault-label">Código de Verificación</span>
+                </div>
+                <div class="doc-vault-code">
+                    <span class="doc-vault-value">{{ doc.codigo_verificacion }}</span>
+                    <button class="doc-copy-btn" data-token="{{ doc.codigo_verificacion }}" title="Copiar código">
+                        <span class="material-icons">content_copy</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pie: URL de validación + icono QR -->
+        <div class="doc-card-foot">
+            <div class="doc-foot-left">
+                <p class="doc-foot-label">URL de Validación</p>
+                <a href="{{ doc.direccion_validacion }}" target="_blank" class="doc-foot-link">
+                    {{ doc.direccion_validacion }}
+                </a>
+            </div>
+            <div class="doc-foot-icon">
+                <span class="material-icons">qr_code</span>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<!-- Estado vacío cuando no hay documentos -->
+<div class="empty-card">
+    <span class="material-icons">inbox</span>
+    <h3>No hay documentos registrados</h3>
+    <p>Aún no se ha registrado ningún expediente. Crea el primer registro.</p>
+</div>
+{% endif %}
