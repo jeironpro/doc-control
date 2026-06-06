@@ -79,7 +79,7 @@ def table():
 
 
 @app.route("/crear/")
-def crear():
+def create_modal():
     """HTMX: modal con formulario vacío para nuevo documento."""
     return render_template("partials/_create_modal.html")
 
