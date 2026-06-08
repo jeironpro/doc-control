@@ -39,13 +39,28 @@ ORGANISMS = {
     "MNF": "Ministerio de Hacienda",
     "DEMO": None,
     "TGSS": "Tesorería General de la Seguridad Social",
+    "PGR": "Procuraduría General de la República",
+    "PJ": "Poder Judicial",
+    "MIREX": "Ministerio de Relaciones Exteriores",
+    "MERD": "Ministerio de Educación de la República Dominicana",
+    "INFOTEP": "Instituto Nacional de Formación Técnico Profesional",
+    "AB": "Ajuntament de Barcelona"
 }
 
 
-def get_docs():
-    """Devuelve todos los documentos de la BD."""
+def get_docs(ambito=None):
+    """Devuelve todos los documentos de la BD, opcionalmente filtrados por ámbito."""
     with engine.connect() as conn:
-        return list(conn.execute(text("SELECT * FROM documento")))
+        if ambito:
+            return list(conn.execute(text("SELECT * FROM documento WHERE ambito = :ambito ORDER BY fecha_hora DESC"), {"ambito": ambito}))
+        return list(conn.execute(text("SELECT * FROM documento ORDER BY fecha_hora DESC")))
+
+
+def get_ambitos():
+    """Devuelve lista de ámbitos únicos ordenados alfabéticamente."""
+    with engine.connect() as conn:
+        rows = conn.execute(text("SELECT DISTINCT ambito FROM documento WHERE ambito IS NOT NULL ORDER BY ambito"))
+        return [row[0] for row in rows]
 
 
 def get_stats(docs):
@@ -59,17 +74,20 @@ def get_stats(docs):
 
 def render_table():
     """Renderiza el partial con la tabla de documentos y stats."""
-    docs = get_docs()
+    ambito_filter = request.args.get("ambito") or None
+    docs = get_docs(ambito_filter)
+    ambitos = get_ambitos()
     top_ambito, top_count = get_stats(docs)
-    return render_template("partials/_datos.html", docs=docs, top_ambito=top_ambito, top_count=top_count)
+    return render_template("partials/_datos.html", docs=docs, top_ambito=top_ambito, top_count=top_count, ambitos=ambitos, current_ambito=ambito_filter)
 
 
 @app.route("/")
 def root():
     """Página principal carga inicial completa."""
     docs = get_docs()
+    ambitos = get_ambitos()
     top_ambito, top_count = get_stats(docs)
-    return render_template("index.html", docs=docs, top_ambito=top_ambito, top_count=top_count)
+    return render_template("index.html", docs=docs, top_ambito=top_ambito, top_count=top_count, ambitos=ambitos, current_ambito=None)
 
 
 @app.route("/tabla")

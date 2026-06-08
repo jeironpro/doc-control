@@ -20,12 +20,24 @@
     </div>
 </div>
 
-<!-- Encabezado con botón para nuevo registro -->
+<!-- Encabezado con filtro y botón -->
 <div class="section-header">
     <div>
         <h2><span class="material-icons">folder</span> Todos los Documentos</h2>
         <p class="subtitle">Listado de expedientes registrados y validados en el sistema.</p>
     </div>
+    {% if ambitos %}
+    <div class="filter-group">
+        <span class="filter-label">Filtrar por ámbito:</span>
+        <select class="filter-select" hx-get="/tabla" hx-target="#main-content" hx-swap="innerHTML"
+                name="ambito" hx-trigger="change">
+            <option value="" {% if not current_ambito %}selected{% endif %}>Todos</option>
+            {% for ambito in ambitos %}
+            <option value="{{ ambito }}" {% if current_ambito == ambito %}selected{% endif %}>{{ ambito }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    {% endif %}
     <button class="btn-add" hx-get="/crear/" hx-target="#modal-root" hx-swap="innerHTML">
         <span class="material-icons">add_circle</span>
         <span>Nuevo Registro</span>
