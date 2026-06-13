@@ -65,6 +65,14 @@ python app.py
 
 El servidor arranca en `http://localhost:5000`.
 
+## Descarga de archivos
+
+Cada tarjeta de documento incluye un botón de descarga que muestra los PDFs asociados al registro desde la carpeta `certs/`. Para que los PDFs descargados desde cada entidad sean válidos deben renombrarse siguiendo la nomenclatura establecida:
+
+- El nombre base se toma del **número de expediente**; si el registro no tiene expediente, se usa el **código de verificación**.
+- Se normaliza reemplazando todo carácter especial (que no sea `-`) por `-`.
+- Un registro puede tener varios archivos: `{base}.pdf`, `{base}_1.pdf`, `{base}_2.pdf`, etc.
+
 ## Tecnologías
 
 - **Flask** — backend y rutas

@@ -450,6 +450,10 @@ body {
     color: #ef4444;
 }
 
+.doc-card-actions .btn-action.btn-download:hover {
+    color: #10b981;
+}
+
 /* Card body */
 .doc-card-body {
     padding: 0.75rem 1.5rem 1.25rem;
@@ -1142,6 +1146,53 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 .delete-doc-value.code {
     font-family: 'JetBrains Mono', 'Courier New', monospace;
     font-size: 0.82rem;
+}
+
+/* Download list */
+.download-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.download-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--on-surface);
+    transition: all 0.15s ease;
+}
+
+.download-item:hover {
+    border-color: #c7d2fe;
+    background: #eef2ff;
+}
+
+.download-item-icon {
+    font-size: 1.5rem !important;
+    color: #ef4444 !important;
+}
+
+.download-item-name {
+    flex: 1;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--on-surface);
+    word-break: break-all;
+}
+
+.download-item-action {
+    font-size: 1.1rem !important;
+    color: #94a3b8 !important;
+}
+
+.download-item:hover .download-item-action {
+    color: #4f46e5 !important;
 }
 
 /* Utilities */

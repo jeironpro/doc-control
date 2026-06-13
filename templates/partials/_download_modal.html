@@ -1,0 +1,41 @@
+<div class="modal-backdrop">
+    <div class="modal" role="dialog">
+        <div class="modal-head">
+            <div class="modal-head-left">
+                <span class="material-icons" style="color:#10b981;">download</span>
+                <h2>Descargar Archivos</h2>
+            </div>
+            <button class="modal-close" title="Cerrar">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <p style="color:#475569;margin:0 0 1.25rem;font-size:0.9rem;line-height:1.5;">
+                Archivos disponibles para el expediente <strong>{{ doc.expediente_numero_registro or doc.codigo_verificacion }}</strong>.
+            </p>
+
+            {% if files %}
+            <div class="download-list">
+                {% for file in files %}
+                <a href="/archivo/{{ file }}" target="_blank" class="download-item">
+                    <span class="material-icons download-item-icon">picture_as_pdf</span>
+                    <span class="download-item-name">{{ file }}</span>
+                    <span class="material-icons download-item-action">open_in_new</span>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div style="text-align:center;padding:1.5rem 0;color:#94a3b8;">
+                <span class="material-icons" style="font-size:2.5rem;display:block;margin-bottom:0.75rem;opacity:0.3;">search_off</span>
+                <p style="font-weight:600;margin-bottom:0.25rem;">No hay archivos disponibles</p>
+                <p style="font-size:0.85rem;">No se encontraron certificados PDF para este registro.</p>
+            </div>
+            {% endif %}
+
+            <div class="modal-actions" style="margin-top:1.25rem;">
+                <button type="button" class="btn-cancel modal-close-btn">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

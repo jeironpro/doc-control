@@ -1,6 +1,7 @@
 import os
+import re
 from collections import Counter
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
 
@@ -22,6 +23,38 @@ DATABASE_URL = (
 
 # Motor de conexión con pool y reciclado para evitar timeouts
 engine = create_engine(DATABASE_URL, pool_pre_ping=True, pool_recycle=3600)
+
+# Ruta a la carpeta de certificados PDF
+CERTS_DIR = os.path.join(os.path.dirname(__file__), "certs")
+
+
+def normalize_filename(name):
+    """Normaliza un nombre: reemplaza cualquier carácter especial (excepto -) por -."""
+    return re.sub(r'[^a-zA-Z0-9\-]', '-', name)
+
+
+def find_cert_files(base_name):
+    """Busca archivos PDF en certs/ cuyo nombre coincida con base_name normalizado."""
+    if not base_name:
+        return []
+    norm = normalize_filename(base_name).lower()
+    files = []
+    try:
+        for f in os.listdir(CERTS_DIR):
+            stem, ext = os.path.splitext(f)
+            if ext.lower() != '.pdf':
+                continue
+            stem_lower = stem.lower()
+            if stem_lower == norm:
+                files.append(f)
+            else:
+                m = re.match(r'^' + re.escape(norm) + r'_(\d+)$', stem_lower)
+                if m:
+                    files.append(f)
+    except FileNotFoundError:
+        pass
+    files.sort(key=lambda x: (x.lower(), x))
+    return files
 
 # Mapa de prefijo de ámbito → nombre del organismo (None = sin nombre fijo)
 ORGANISMS = {
@@ -175,6 +208,22 @@ def delete_modal(id):
     with engine.connect() as conn:
         doc = conn.execute(text("SELECT * FROM documento WHERE id = :id"), {"id": id}).fetchone()
     return render_template("partials/_delete_modal.html", doc=doc)
+
+
+@app.route("/descargar/<id>/")
+def download_modal(id):
+    """HTMX: modal con lista de archivos PDF disponibles para descargar."""
+    with engine.connect() as conn:
+        doc = conn.execute(text("SELECT * FROM documento WHERE id = :id"), {"id": id}).fetchone()
+    base = doc.expediente_numero_registro or doc.codigo_verificacion
+    files = find_cert_files(base)
+    return render_template("partials/_download_modal.html", doc=doc, files=files)
+
+
+@app.route("/archivo/<path:filename>")
+def serve_file(filename):
+    """Sirve un archivo PDF desde la carpeta certs/."""
+    return send_from_directory(CERTS_DIR, filename)
 
 
 @app.route("/eliminar/<int:id>/", methods=["DELETE"])

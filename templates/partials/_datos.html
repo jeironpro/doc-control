@@ -54,6 +54,7 @@
             <span class="doc-badge">{{ doc.ambito }}</span>
             <span class="doc-head-right">
                 <span class="doc-card-actions">
+                    <button class="btn-action btn-download" title="Descargar" hx-get="/descargar/{{ doc.id }}/" hx-target="#modal-root" hx-swap="innerHTML"><span class="material-icons">download</span></button>
                     <button class="btn-action btn-view" title="Editar" hx-get="/editar/{{ doc.id }}/" hx-target="#modal-root" hx-swap="innerHTML"><span class="material-icons">edit</span></button>
                     <button class="btn-action btn-delete" title="Eliminar" hx-get="/eliminar/{{ doc.id }}/" hx-target="#modal-root" hx-swap="innerHTML"><span class="material-icons">delete</span></button>
                 </span>
